@@ -26,7 +26,7 @@ app.post("/api/notes", (req,res)=>{
 })
 
 app.get("/notes", (req,res)=>{
-    res.sendFile(path.join(__dirname, "./public/index.html"))
+    res.sendFile(path.join(__dirname, "./public/notes.html"))
 })
 
 
