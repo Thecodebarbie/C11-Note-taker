@@ -20,6 +20,12 @@ app.get("*",(req,res)=>{
     res.sendFile(path.join(__dirname, './public/index/html'))
 })
 
+app.use("/notes",(req,res)=>{
+    res.sendFile(err=>{
+        path.join(__dirname, "./notes.html")
+    })
+})
+
 
 app.listen(PORT, ()=>{
     console.log('app is listening at PORT: http://localhost:3001/'+PORT)
