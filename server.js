@@ -10,7 +10,7 @@ const fs =  require("fs")
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-
+app.use(express.static('public'))
 
 // api routes
 app.get("/api/notes", (req,res)=>{
