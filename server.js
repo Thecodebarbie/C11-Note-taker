@@ -22,8 +22,44 @@ app.get("/api/notes", (req,res)=>{
 
 
 app.post("/api/notes", (req,res)=>{
+    // Read the existing notes from the database
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
+        if (err) {
+            console.error("Error reading database file:", err);
+            return res.status(500).send("Internal Server Error");
+        }
 
+        // Parse the existing notes data
+        const notes = JSON.parse(data);
+
+        // Generate a unique ID for the new note
+        const newNoteId = notes.length > 0 ? notes[notes.length - 1].id + 1 : 1;
+
+        // Extract the new note data from the request body
+        const newNote = {
+            id: newNoteId,
+            title: req.body.title, // Assuming title is sent in the request body
+            text: req.body.text // Assuming text is sent in the request body
+        };
+
+        // Add the new note to the existing notes array
+        notes.push(newNote);
+
+        // Write the updated notes array back to the database file
+        fs.writeFile("./db/db.json", JSON.stringify(notes), err => {
+            if (err) {
+                console.error("Error writing to database file:", err);
+                return res.status(500).send("Internal Server Error");
+            }
+
+            // Respond with the newly added note
+            res.json(newNote);
+        });
+    });
 })
+
+
+
 
 app.get("/notes", (req,res)=>{
     res.sendFile(path.join(__dirname, "./public/notes.html"))
