@@ -58,7 +58,10 @@ app.post("/api/notes", (req,res)=>{
     });
 })
 
+// Route handler for DELETE /api/notes/:id
+app.delete("/api/notes/:id", (req, res) => {
 
+});
 
 
 app.get("/notes", (req,res)=>{
