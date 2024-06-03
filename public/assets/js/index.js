@@ -52,7 +52,11 @@ const deleteNote = (id) =>
       'Content-Type': 'application/json'
     }
   });
+  
 
+ 
+
+  
 const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
@@ -84,7 +88,33 @@ const handleNoteSave = () => {
 };
 
 // Delete the clicked note
-const handleNoteDelete = (e) => {
+async function handleNoteDelete(e) {
+  // Prevents the click listener for the list from being called when the button inside of it is clicked
+  e.stopPropagation();
+
+  const note = e.target;
+  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+
+  try {
+    // Await the deletion using fetch
+    await deleteNote(noteId);
+    getAndRenderNotes(); // Update UI after successful deletion
+  } catch (error) {
+    console.error('Error handling note deletion:', error);
+    // Optionally, show an error message to the user
+  }
+
+  // Code to update activeNote state (optional)
+  if (activeNote.id === noteId) {
+    activeNote = {};
+  }
+
+  // You can also use renderActiveNote() here to update the active note display
+}
+
+
+
+/*const handleNoteDelete = (e) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
 
@@ -99,7 +129,7 @@ const handleNoteDelete = (e) => {
     getAndRenderNotes();
     renderActiveNote();
   });
-};
+};*/
 
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {

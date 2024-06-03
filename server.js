@@ -59,9 +59,32 @@ app.post("/api/notes", (req,res)=>{
 })
 
 // Route handler for DELETE /api/notes/:id
-app.delete("/api/notes/:id", (req, res) => {
-
-});
+/*app.delete("/api/notes/:id", (req, res) => {
+    const noteId = req.params.id;
+  
+    // Example: Delete the note from a file or database
+    // For demonstration purposes, assuming you are using a JSON file as your database
+    const filePath = path.join(__dirname, "db", "notes.json");
+    
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) {
+        console.error("Error reading notes file:", err);
+        return res.status(500).send("Internal Server Error");
+      }
+  
+      const notes = JSON.parse(data);
+      const updatedNotes = notes.filter(note => note.id !== noteId);
+  
+      fs.writeFile(filePath, JSON.stringify(updatedNotes), err => {
+        if (err) {
+          console.error("Error writing notes file:", err);
+          return res.status(500).send("Internal Server Error");
+        }
+  
+        res.status(200).send("Note deleted successfully");
+      });
+    });
+});*/
 
 
 app.get("/notes", (req,res)=>{
@@ -75,6 +98,35 @@ app.get("*",(req,res)=>{
     res.sendFile(path.join(__dirname, './public/index.html'))
 })
 
+// Route handler for DELETE /api/notes/:id
+app.delete("/api/notes/:id", (req, res) => {
+    const noteId = req.params.id;
+  
+    // Read the existing notes from the database
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
+        if (err) {
+            console.error("Error reading database file:", err);
+            return res.status(500).send("Internal Server Error");
+        }
+  
+        // Parse the existing notes data
+        const notes = JSON.parse(data);
+  
+        // Filter out the note with the specified ID
+        const updatedNotes = notes.filter(note => note.id !== parseInt(noteId));
+  
+        // Write the updated notes array back to the database file
+        fs.writeFile("./db/db.json", JSON.stringify(updatedNotes), err => {
+            if (err) {
+                console.error("Error writing to database file:", err);
+                return res.status(500).send("Internal Server Error");
+            }
+  
+            // Respond with a success message
+            res.status(200).send("Note deleted successfully");
+        });
+    });
+});
 
 
 app.listen(PORT, ()=>{
